@@ -11,7 +11,7 @@
     </el-table-column>
     <el-table-column
       prop="loginName"
-      label="姓名1"
+      label="姓名"
       width="180">
     </el-table-column>
     <el-table-column
