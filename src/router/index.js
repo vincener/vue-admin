@@ -158,6 +158,24 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/fire',
+    component: Layout,
+    redirect: 'fire/fire',
+    name: 'fire',
+    meta: {
+      title: '火灾管理',
+      icon: 'excel'
+    },
+    children: [
+      {
+        path: 'fire',
+        component: () => import('@/views/fire/fire'),
+        name: 'firemanage',
+        meta: { title: '火灾管理' }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]
