@@ -8,7 +8,8 @@ module.exports = {
   dev: {
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/', //  http://localhost:9527/#/login
+    //assetsPublicPath: '/admin/',//http://localhost:9527/admin/#/login
     proxyTable: {},
 
     // Various Dev Server settings
@@ -57,7 +58,7 @@ module.exports = {
      * then assetsPublicPath should be set to "/bar/".
      * In most cases please use '/' !!!
      */
-    assetsPublicPath: '/',
+    assetsPublicPath: '',
 
     /**
      * Source Maps

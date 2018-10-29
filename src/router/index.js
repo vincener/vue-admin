@@ -172,7 +172,7 @@ export const constantRouterMap = [
         path: 'fire',
         component: () => import('@/views/fire/fire'),
         name: 'firemanage',
-        meta: { title: '火灾管理' }
+        meta: { title: '消防栓管理', icon: 'fire' }
       }
     ]
   },
