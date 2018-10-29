@@ -145,6 +145,7 @@ export default {
   },
   mounted() {
     this.resetSearch();
+
   },
   methods: {
     resetSearch() {
