@@ -1,9 +1,14 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <span class="demonstration">火灾名称：</span> <el-input v-model="searchConfig.conditions.name" placeholder="火灾名称" style="width: 200px;" class="filter-item" @keyup.enter.native="search"/>
+      <span class="demonstration">消防栓名称：</span> <el-input v-model="searchConfig.conditions.name" placeholder="火灾名称" style="width: 200px;" class="filter-item" @keyup.enter.native="search"/>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="search">查询</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <BookTypeOption v-model="bookType" />
+      <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" icon="document" @click="handleDownload">导出Excel</el-button>
+
+      <img-uploader v-model="uploadConfig.files" :multiple="true"/>
+
     </div>
     <el-table
       :data="tableData.data"
@@ -20,7 +25,7 @@
         width="180"/>
       <el-table-column
         prop="name"
-        label="火灾"
+        label="消防栓"
         width="180"/>
       <el-table-column
         prop="address"
@@ -45,22 +50,22 @@
     <pagination v-show="tableData.total>0" :page.sync="searchConfig.pageNumber" :limit.sync="searchConfig.pageSize" :total="tableData.total" @pagination="search" />
     <el-dialog :title="dialogConfig.textMap[dialogConfig.dialogStatus]" :visible.sync="dialogConfig.dialogFormVisible">
       <el-form ref="dataForm" :rules="formConfig.rules" :model="formConfig.temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="名称" prop="name" label-width="100px">
           <el-input v-model="formConfig.temp.name"/>
         </el-form-item>
-        <el-form-item label="地址" prop="address">
+        <el-form-item label="地址" prop="address" label-width="100px">
           <el-input v-model="formConfig.temp.address"/>
         </el-form-item>
-        <el-form-item label="消防栓类型" prop="type">
+        <el-form-item label="消防栓类型" prop="type" label-width="100px">
           <el-input v-model="formConfig.temp.type"/>
         </el-form-item>
-        <el-form-item label="管网直径" prop="pipeDiameter">
+        <el-form-item label="管网直径" prop="pipeDiameter" label-width="100px">
           <el-input v-model="formConfig.temp.pipeDiameter"/>
         </el-form-item>
-        <el-form-item label="管网压力" prop="pipePressure">
+        <el-form-item label="管网压力" prop="pipePressure" label-width="100px">
           <el-input v-model="formConfig.temp.pipePressure"/>
         </el-form-item>
-        <el-form-item label="使用情况" prop="state">
+        <el-form-item label="使用情况" prop="state" label-width="100px">
           <el-select v-model="formConfig.temp.state" class="filter-item" placeholder="Please select">
             <el-option v-for="item in stateOptions" :key="item" :label="item" :value="item"/>
           </el-select>
@@ -72,26 +77,31 @@
         <el-button type="primary" @click="dialogConfig.dialogStatus==='create'?createData():updateData()">保存</el-button>
       </div>
     </el-dialog>
+
   </div>
+
 </template>
 
 <script>
-import {
-  getPage,
-  save,
-  deleteById,
-  update,
-  getById
-} from '@/api/fire.js'
+import { getPage, save, deleteById, update, getById } from '@/api/fire.js'
 import Pagination from '@/components/Pagination'
-
+import FilenameOption from '@/views/excel/components/FilenameOption'
+import AutoWidthOption from '@/views/excel/components/AutoWidthOption'
+import BookTypeOption from '@/views/excel/components/BookTypeOption'
+import ImgUploader from '@/components/ImgUpload/ImgUploader'
 const stateOptions = ['正常使用', '被占用', '已损坏']
 
 export default {
-
-  components: { Pagination },
+  components: { Pagination, FilenameOption, AutoWidthOption, BookTypeOption, ImgUploader },
   data() {
     return {
+      uploadConfig: {
+        files: []
+      },
+      downloadLoading: false,
+      filename: '',
+      autoWidth: true,
+      bookType: 'xlsx',
       tableKey: 0,
       tableData: {
         data: [],
@@ -252,6 +262,28 @@ export default {
           this.resetSearch()
         }
       })
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['Id', '状态', '名称', '地址', '状态']
+        const filterVal = ['id', 'state', 'name', 'address', 'state']
+        const list = this.tableData.data
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'export_excel',
+          autoWidth: true,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        return v[j]
+      }))
     }
   }
 }

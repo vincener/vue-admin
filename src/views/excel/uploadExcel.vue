@@ -34,6 +34,7 @@ export default {
       return false
     },
     handleSuccess({ results, header }) {
+      debugger
       this.tableData = results
       this.tableHeader = header
     }

@@ -146,15 +146,15 @@ export const constantRouterMap = [
     redirect: '/test/test',
     name: 'excel',
     meta: {
-      title: 'excel',
+      title: '导入Excel',
       icon: 'excel'
     },
     children: [
       {
         path: 'test',
-        component: () => import('@/views/test/test'),
-        name: 'exportExcel',
-        meta: { title: 'exportExcel' }
+        component: () => import('@/views/excel/uploadExcel'),
+        name: 'importExcel',
+        meta: { title: '导入Excel' }
       }
     ]
   },

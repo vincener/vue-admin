@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(username, password, identifyCode) {
   return request({
-    url: '/user/login',
+    url: '/user/loginCode',
     method: 'post',
     data: JSON.stringify({
       loginName: username,
