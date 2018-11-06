@@ -176,7 +176,29 @@ export const constantRouterMap = [
       }
     ]
   },
-
+  {
+    path: '/manage',
+    component: Layout,
+    redirect: 'role',
+    name: 'role',
+    meta: {
+      title: '机构管理',
+      icon: 'excel'
+    },
+    children: [{
+      path: 'org',
+      component: () => import('@/views/org/org'),
+      name: 'orgmanage',
+      meta: { title: '机构管理', icon: 'fire' }
+    },
+    {
+      path: 'role',
+      component: () => import('@/views/role/role'),
+      name: 'rolemanage',
+      meta: { title: '角色管理', icon: 'fire' }
+    }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
